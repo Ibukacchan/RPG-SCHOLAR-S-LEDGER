@@ -8,6 +8,9 @@
 @media(max-width:480px){.rpg-hero{grid-template-columns:90px 1fr;gap:11px;padding:11px}.rpg-avatar{width:90px;height:120px}.rpg-name{font-size:1.3rem}}
 
 /* Arcane Academy expansion */
+/* Level-responsive character profile */
+.character-portrait-panel{display:grid;grid-template-columns:94px minmax(0,1fr);gap:14px;align-items:center;margin-top:16px;padding:13px;border:1px solid #74608a;border-radius:6px;background:linear-gradient(115deg,#201b2c,#29231d 70%,#3a2d48);box-shadow:inset 0 0 24px #b89be211}.character-portrait{height:94px;width:94px;display:grid;place-items:center;border-radius:50%;font-size:2.65rem;border:2px solid #9b83b7;background:radial-gradient(circle,#59466c,#211b2b 70%);box-shadow:0 0 18px #a78bfa44;transition:all .3s}.character-portrait-copy h3{color:#e4cd8a;margin:3px 0}.character-portrait-copy p{color:#c8bdd4;font-size:.88rem;margin:3px 0 8px}.character-portrait-panel.tier-adept .character-portrait{border-color:#c1a875;box-shadow:0 0 24px #c1a87577;background:radial-gradient(circle,#6c5939,#211b2b 72%)}.character-portrait-panel.tier-master .character-portrait{border-color:#80c9df;box-shadow:0 0 28px #80c9df88;background:radial-gradient(circle,#315e78,#211b2b 72%)}.character-portrait-panel.tier-legend .character-portrait{border-color:#e5a9ef;box-shadow:0 0 34px #c084fcaa;background:radial-gradient(circle,#73448a,#211b2b 72%);animation:arcaneGlow 2.3s ease-in-out infinite}@media(max-width:420px){.character-portrait-panel{grid-template-columns:70px minmax(0,1fr);gap:10px}.character-portrait{width:70px;height:70px;font-size:2rem}}
+
 .arcane-wrap{background:radial-gradient(ellipse at 50% 0%,#3b3152 0%,#201c2b 48%,#171713 100%);border:1px solid #756344;padding:16px;margin:14px 0;position:relative;overflow:hidden}
 .arcane-wrap:before{content:"✦  ·  ✧  ·  ✦";position:absolute;right:12px;top:8px;color:#c1a875;opacity:.5;letter-spacing:.25em;pointer-events:none}
 .arcane-hero{display:grid;grid-template-columns:100px 1fr;gap:14px;align-items:center}
@@ -66,6 +69,10 @@
         <div class="arcane-progress"><div id="arcaneXpBar" style="width:0%"></div></div>
         <div class="arcane-sub" id="arcaneXpLabel">0 / 100 XP to next level</div>
       </div>
+    </div>
+    <div class="character-portrait-panel" id="characterPortraitPanel">
+      <div class="character-portrait" id="characterPortrait" aria-hidden="true">⚔️</div>
+      <div class="character-portrait-copy"><div class="kicker">Your evolving character</div><h3 id="characterTitle">Initiate of the Lantern Hall</h3><p id="characterDescription">Your first steps begin in the academy courtyard. Study to unlock new titles and visual auras.</p><div class="arcane-chip" id="characterMilestone">Initiate · Level 1</div></div>
     </div>
     <div class="arcane-meters">
       <div class="arcane-meter"><strong id="arcaneLevel">1</strong><span>Character level</span></div>
@@ -221,6 +228,9 @@ function renderArcane(){
  $('#arcaneName').textContent=r.name||'The Unwritten Scholar';$('#arcaneClassLabel').textContent=r.className;$('#arcaneRank').textContent=(lv>=10?'Keeper of the Grand Archive':lv>=7?'Master of the Lantern Hall':lv>=4?'Adept of the Hidden Wing':'Novice of the Lantern Hall')+' · Level '+lv;
  $('#arcaneLevel').textContent=lv;$('#arcaneXP').textContent=r.xp;$('#arcaneCoins').textContent=r.coins;$('#arcanePoints').textContent=points;$('#arcaneXpBar').style.width=within+'%';$('#arcaneXpLabel').textContent=within+' / 100 XP to next level';
  $('#arcaneNameInput').value=r.name||'';$('#arcaneClassInput').value=r.className||'Scholar Knight';$('#arcaneSigil').textContent=({'Scholar Knight':'⚔','Arcane Linguist':'✒','Field Researcher':'⌕','Lorekeeper':'✦'})[r.className]||'✦';
+ const portraitMeta = lv>=15 ? {tier:'tier-legend',title:'Legend of the Grand Archive',desc:'Your name is written into the academy chronicles. A radiant aura marks a scholar who has kept learning through every trial.',milestone:'Legendary · Level '+lv} : lv>=10 ? {tier:'tier-master',title:'Archmage of the Lantern Hall',desc:'You have mastered the academy’s advanced halls. Your profile carries the blue arcane aura of a senior scholar.',milestone:'Master · Level '+lv} : lv>=7 ? {tier:'tier-master',title:'Keeper of the Hidden Wing',desc:'Your growing discipline opens the hidden wing. Your character portrait gains a cool magical glow.',milestone:'Veteran · Level '+lv} : lv>=4 ? {tier:'tier-adept',title:'Adept of the Arcane Library',desc:'You have moved beyond the novice halls. Your portrait and title reflect your developing mastery.',milestone:'Adept · Level '+lv} : {tier:'',title:'Initiate of the Lantern Hall',desc:'Your journey has begun. Complete real Field Study tasks and Mock Board sessions to gain XP, rise through the ranks, and evolve your character profile.',milestone:'Initiate · Level '+lv};
+ const classPortrait = {'Scholar Knight':'⚔️','Arcane Linguist':'🔮','Field Researcher':'🌿','Lorekeeper':'📜'};
+ $('#characterPortrait').textContent=classPortrait[r.className]||'✦';$('#characterTitle').textContent=portraitMeta.title;$('#characterDescription').textContent=portraitMeta.desc;$('#characterMilestone').textContent=portraitMeta.milestone;$('#characterPortraitPanel').className='character-portrait-panel '+portraitMeta.tier;
  let day=today(),daily=r.claims['daily:'+day],week=weekStart(day),weeklyKey='weekly:'+week,weekDone=state.sessions.filter(s=>s.date>=week&&s.date<=weekEnd(day)&&s.status==='Completed').length;
  $('#arcaneDailyStatus').textContent=daily?'Daily commission claimed for '+fmt(day)+'.':'Complete a Field Study task, course review, or Mock Board session today, then claim your reward.';
  $('#arcaneClaimDaily').disabled=!!daily;$('#arcaneClaimDaily').textContent=daily?'Reward claimed':'Claim daily reward';
