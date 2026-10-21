@@ -1,0 +1,19 @@
+{
+  "name": "The Scholar's Ledger \u2014 Arcane Academy",
+  "short_name": "Scholar's Ledger",
+  "description": "A single-player academic RPG with Field Study and Mock Board Preparation.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#171713",
+  "theme_color": "#24221b",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
